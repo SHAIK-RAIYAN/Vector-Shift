@@ -1,0 +1,26 @@
+# Build artifacts
+dist/
+build/
+coverage/
+
+# Node
+node_modules/
+*.log
+
+# Environment / system files
+.env
+.DS_Store
+Thumbs.db
+~$*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+env/
+.pytest_cache/
+
+# Editor
+.vscode/
