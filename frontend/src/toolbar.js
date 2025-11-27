@@ -11,7 +11,7 @@ import {
   Database 
 } from 'lucide-react';
 
-// Node Icons Map
+
 const nodeIcons = {
   customInput: ArrowRightToLine,
   llm: BrainCircuit,

@@ -58,12 +58,12 @@ export const ThemeToggle = ({ isDark, toggleTheme }) => {
 
 // SubmissionAlert Component
 export const SubmissionAlert = ({ result, error, onClose }) => {
-  // Hooks must be called before any early returns
+  
   const [currentTheme, setCurrentTheme] = useState(() => 
     document.body.classList.contains('dark') ? 'dark' : 'light'
   );
 
-  // Watch for theme changes while alert is open
+  
   useEffect(() => {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
@@ -84,18 +84,18 @@ export const SubmissionAlert = ({ result, error, onClose }) => {
     };
   }, []);
 
-  // Early return after hooks
+  
   if (!result && !error) return null;
 
   const isDAG = result?.is_dag;
   const isEmpty = result?.num_nodes === 0;
 
   // Icon colors
-  const successColor = '#10b981'; // green
-  const errorColor = '#ef4444'; // red
-  const emptyColor = '#3b82f6'; // blue
+  const successColor = '#10b981';
+  const errorColor = '#ef4444'; 
+  const emptyColor = '#3b82f6'; 
   
-  // Determine icon color based on priority: error -> empty -> success -> error (cycle)
+  
   const iconColor = error 
     ? errorColor
     : isEmpty
@@ -104,7 +104,7 @@ export const SubmissionAlert = ({ result, error, onClose }) => {
     ? successColor
     : errorColor;
 
-  // Background based on reactive theme state
+  
   const alertBg = currentTheme === 'dark'
     ? 'rgba(0, 0, 0, 0.8)' 
     : 'rgba(255, 255, 255, 0.8)';
@@ -140,7 +140,7 @@ export const SubmissionAlert = ({ result, error, onClose }) => {
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Left: Icon */}
+        
         <div
           style={{
             width: '40px',
@@ -168,7 +168,7 @@ export const SubmissionAlert = ({ result, error, onClose }) => {
           )}
         </div>
 
-        {/* Middle: Text Details */}
+        
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
           {error ? (
             <div style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>
@@ -199,7 +199,7 @@ export const SubmissionAlert = ({ result, error, onClose }) => {
           ) : null}
         </div>
 
-        {/* Right: Close Button */}
+        
         <button
           onClick={onClose}
           style={{
@@ -275,7 +275,7 @@ export const PipelineUI = () => {
 
     // Theme state management
     useEffect(() => {
-      // Check localStorage first, then system preference
+      
       const savedTheme = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       
