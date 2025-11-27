@@ -10,7 +10,7 @@ export const TextNode = ({ id, data }) => {
     setCurrText(e.target.value);
   };
 
-  // Auto-resize textarea based on content
+  
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -18,7 +18,7 @@ export const TextNode = ({ id, data }) => {
     }
   }, [currText]);
 
-  // Extract variables from {{variable}} pattern
+  
   const extractVariables = (text) => {
     const regex = /\{\{([^}]+)\}\}/g;
     const matches = [];
@@ -31,16 +31,16 @@ export const TextNode = ({ id, data }) => {
       }
     }
     
-    // Return unique variables only
+    
     return [...new Set(matches)];
   };
 
-  // Generate handles based on extracted variables
+  
   const generateHandles = () => {
     const variables = extractVariables(currText);
     const handles = [];
 
-    // Add target handles for each variable on the LEFT
+    
     variables.forEach((variable, index) => {
       handles.push({
         type: 'target',
@@ -51,7 +51,7 @@ export const TextNode = ({ id, data }) => {
       });
     });
 
-    // Add source handle for output on the RIGHT
+    
     handles.push({
       type: 'source',
       position: Position.Right,

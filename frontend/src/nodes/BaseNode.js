@@ -1,6 +1,13 @@
-import { Handle, Position } from 'reactflow';
+import { Handle, Position, useReactFlow } from 'reactflow';
+import { X } from 'lucide-react';
 
 export const BaseNode = ({ id, data, title, children, handles = [] }) => {
+  const { deleteElements } = useReactFlow();
+
+  const handleDelete = () => {
+    deleteElements({ nodes: [{ id }] });
+  };
+
   return (
     <div style={{
       width: 200,
@@ -21,9 +28,40 @@ export const BaseNode = ({ id, data, title, children, handles = [] }) => {
       <div style={{
         fontWeight: 600,
         fontSize: '14px',
-        color: 'var(--text-primary)'
+        color: 'var(--text-primary)',
+        position: 'relative'
       }}>
         {title}
+        {/* Delete Button */}
+        <button
+          onClick={handleDelete}
+          style={{
+            position: 'absolute',
+            top: '0px',
+            right: '0px',
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--text-primary)',
+            opacity: 0.5,
+            transition: 'all 0.2s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.opacity = '1';
+            e.currentTarget.style.color = '#ef4444';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.opacity = '0.5';
+            e.currentTarget.style.color = 'var(--text-primary)';
+          }}
+          aria-label="Delete node"
+        >
+          <X width={12} height={12} />
+        </button>
       </div>
 
       {/* Content Section */}

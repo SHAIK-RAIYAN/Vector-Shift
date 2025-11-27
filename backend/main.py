@@ -6,7 +6,7 @@ import networkx as nx
 
 app = FastAPI()
 
-# Add CORS middleware
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -15,7 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Pipeline data model
+
 class PipelineData(BaseModel):
     nodes: List[Dict[str, Any]]
     edges: List[Dict[str, Any]]
@@ -29,10 +29,10 @@ def parse_pipeline(pipeline: PipelineData):
     nodes = pipeline.nodes
     edges = pipeline.edges
     
-    # Create directed graph from edges
+    
     G = nx.DiGraph()
     
-    # Add edges to graph (edges have 'source' and 'target' fields)
+    
     for edge in edges:
         source = edge.get('source')
         target = edge.get('target')

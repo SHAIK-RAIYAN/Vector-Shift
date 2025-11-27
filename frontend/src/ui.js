@@ -7,7 +7,8 @@ import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
 import { TextNode } from './nodes/textNode';
 import { DateNode, FilterNode, NoteNode, TransformNode, DatabaseNode } from './nodes/exampleNodes';
-import { Sun, Moon, AlertCircle, CheckCircle2, XCircle, X } from 'lucide-react';
+import { Sun, Moon, AlertCircle, CheckCircle2, XCircle, X, FileWarning } from 'lucide-react';
+import { ButtonEdge } from './edges/ButtonEdge';
 
 import 'reactflow/dist/style.css';
 
@@ -87,13 +88,18 @@ export const SubmissionAlert = ({ result, error, onClose }) => {
   if (!result && !error) return null;
 
   const isDAG = result?.is_dag;
+  const isEmpty = result?.num_nodes === 0;
 
   // Icon colors
   const successColor = '#10b981'; // green
   const errorColor = '#ef4444'; // red
+  const emptyColor = '#3b82f6'; // blue
   
+  // Determine icon color based on priority: error -> empty -> success -> error (cycle)
   const iconColor = error 
     ? errorColor
+    : isEmpty
+    ? emptyColor
     : isDAG 
     ? successColor
     : errorColor;
@@ -142,6 +148,8 @@ export const SubmissionAlert = ({ result, error, onClose }) => {
             borderRadius: '50%',
             backgroundColor: iconColor === successColor 
               ? 'rgba(16, 185, 129, 0.2)' 
+              : iconColor === emptyColor
+              ? 'rgba(59, 130, 246, 0.2)'
               : 'rgba(239, 68, 68, 0.2)',
             display: 'flex',
             alignItems: 'center',
@@ -151,6 +159,8 @@ export const SubmissionAlert = ({ result, error, onClose }) => {
         >
           {error ? (
             <AlertCircle width={20} height={20} color={iconColor} strokeWidth={2.5} />
+          ) : isEmpty ? (
+            <FileWarning width={20} height={20} color={iconColor} strokeWidth={2.5} />
           ) : isDAG ? (
             <CheckCircle2 width={20} height={20} color={iconColor} strokeWidth={2.5} />
           ) : (
@@ -164,6 +174,15 @@ export const SubmissionAlert = ({ result, error, onClose }) => {
             <div style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>
               Error: {error}
             </div>
+          ) : isEmpty ? (
+            <>
+              <div style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>
+                Pipeline is Empty
+              </div>
+              <div style={{ fontSize: '13px', color: 'var(--text-primary)', opacity: 0.8 }}>
+                Add nodes to the canvas to build a pipeline.
+              </div>
+            </>
           ) : result ? (
             <>
               <div style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>
@@ -223,6 +242,11 @@ const nodeTypes = {
   note: NoteNode,
   transform: TransformNode,
   database: DatabaseNode,
+};
+
+const edgeTypes = {
+  default: ButtonEdge,
+  buttonEdge: ButtonEdge,
 };
 
 const selector = (state) => ({
@@ -325,7 +349,7 @@ export const PipelineUI = () => {
     return (
         <>
         <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
-        <div ref={reactFlowWrapper} style={{width: '100wv', height: '100%'}}>
+        <div ref={reactFlowWrapper} style={{width: '100vw', height: '100vh'}}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -336,6 +360,7 @@ export const PipelineUI = () => {
                 onDragOver={onDragOver}
                 onInit={setReactFlowInstance}
                 nodeTypes={nodeTypes}
+                edgeTypes={edgeTypes}
                 proOptions={proOptions}
                 snapGrid={[gridSize, gridSize]}
                 connectionLineType='smoothstep'
@@ -345,6 +370,7 @@ export const PipelineUI = () => {
                 <MiniMap 
                     nodeColor={isDark ? "#555" : "#eee"}
                     maskColor={isDark ? "rgba(0,0,0, 0.8)" : "rgba(255,255,255, 0.8)"}
+                    className="react-flow-minimap"
                     style={{
                         backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9',
                         border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e5e7eb'

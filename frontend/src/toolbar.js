@@ -27,8 +27,8 @@ const nodeIcons = {
 export const PipelineToolbar = () => {
 
     return (
-        <div style={{ padding: '10px' }}>
-            <div style={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+        <div className="pipeline-toolbar">
+            <div className="pipeline-toolbar-content">
                 <DraggableNode type='customInput' label='Input' icon={nodeIcons.customInput} />
                 <DraggableNode type='llm' label='LLM' icon={nodeIcons.llm} />
                 <DraggableNode type='customOutput' label='Output' icon={nodeIcons.customOutput} />
