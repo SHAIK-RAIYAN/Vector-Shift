@@ -1,5 +1,3 @@
-// textNode.js
-
 import { useState, useEffect, useRef } from 'react';
 import { Position } from 'reactflow';
 import { BaseNode } from './BaseNode';

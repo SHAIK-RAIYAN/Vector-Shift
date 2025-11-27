@@ -1,13 +1,116 @@
-body {
+/* CSS Variables - Light Mode (Default) */
+:root {
+  --bg-color: #ffffff;
+  --node-bg: #f9f9f9;
+  --text-primary: #111827;
+  --border-color: #e5e7eb;
+  --handle-bg: #ffffff;
+  --node-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --input-bg: rgba(255, 255, 255, 0.5);
+  --input-text: #111827;
+}
+
+/* CSS Variables - Dark Mode */
+.dark {
+  --bg-color: #121212;
+  --node-bg: rgba(30, 30, 30, 0.5);
+  --text-primary: #f3f4f6;
+  --border-color: rgba(255, 255, 255, 0.1);
+  --handle-bg: #1f2937;
+  --node-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  --input-bg: rgba(255, 255, 255, 0.05);
+  --input-text: #f3f4f6;
+}
+
+/* Global Reset */
+html, body, #root {
+  width: 100vw;
+  height: 100vh;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  padding: 0;
+}
+
+html {
+  overflow: hidden;
+}
+
+body {
+  overflow: hidden;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  overflow: hidden;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Form elements inside nodes - adapt to theme */
+input, select, textarea {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border-color: var(--border-color);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--border-color);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* Submission Alert Animation */
+@keyframes slideDownFade {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* React Flow Controls - Glassmorphism */
+.react-flow__controls {
+  background: var(--node-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: var(--node-shadow) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 8px;
+  margin: 10px;
+  padding: 0;
+}
+
+/* React Flow Control Buttons */
+.react-flow__controls-button {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.2s ease;
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: none !important;
+}
+
+.react-flow__controls-button:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+.react-flow__controls-button svg {
+  fill: currentColor !important;
+  stroke: currentColor !important;
 }

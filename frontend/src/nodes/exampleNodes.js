@@ -1,5 +1,3 @@
-// exampleNodes.js
-
 import { useState } from 'react';
 import { Position } from 'reactflow';
 import { BaseNode } from './BaseNode';

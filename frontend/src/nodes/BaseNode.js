@@ -5,10 +5,12 @@ export const BaseNode = ({ id, data, title, children, handles = [] }) => {
     <div style={{
       width: 200,
       minHeight: 80,
-      border: '1px solid #d1d5db',
+      border: '1px solid var(--border-color)',
       borderRadius: '8px',
-      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-      backgroundColor: '#ffffff',
+      boxShadow: 'var(--node-shadow)',
+      backgroundColor: 'var(--node-bg)',
+      backdropFilter: 'blur(10px)',
+      WebkitBackdropFilter: 'blur(10px)',
       padding: '12px',
       display: 'flex',
       flexDirection: 'column',
@@ -19,13 +21,13 @@ export const BaseNode = ({ id, data, title, children, handles = [] }) => {
       <div style={{
         fontWeight: 600,
         fontSize: '14px',
-        color: '#374151'
+        color: 'var(--text-primary)'
       }}>
         {title}
       </div>
 
       {/* Content Section */}
-      <div style={{ flex: 1 }}>
+      <div style={{ flex: 1, color: 'var(--text-primary)' }}>
         {children}
       </div>
 
@@ -39,23 +41,24 @@ export const BaseNode = ({ id, data, title, children, handles = [] }) => {
             style={handleConfig.style}
           />
           {handleConfig.label && (
-  <span
-    style={{
-      position: 'absolute',
-      fontSize: '11px',
-      color: '#6b7280',
-      top: handleConfig.style?.top || '50%',
-      transform: 'translateY(-50%)',
-      whiteSpace: 'nowrap',
-      ...(handleConfig.position === Position.Left
-        ? { right: '100%', marginRight: '8px', textAlign: 'right' } 
-        : { left: '100%', marginLeft: '8px', textAlign: 'left' }    
-      ),
-    }}
-  >
-    {handleConfig.label}
-  </span>
-)}
+            <span
+              style={{
+                position: 'absolute',
+                fontSize: '11px',
+                color: 'var(--text-primary)',
+                opacity: 0.7,
+                top: handleConfig.style?.top || '50%',
+                transform: 'translateY(-50%)',
+                whiteSpace: 'nowrap',
+                ...(handleConfig.position === Position.Left
+                  ? { right: '100%', marginRight: '8px', textAlign: 'right' } 
+                  : { left: '100%', marginLeft: '8px', textAlign: 'left' }    
+                ),
+              }}
+            >
+              {handleConfig.label}
+            </span>
+          )}
         </div>
       ))}
     </div>

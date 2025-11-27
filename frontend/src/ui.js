@@ -1,8 +1,4 @@
-// ui.js
-// Displays the drag-and-drop UI
-// --------------------------------------------------
-
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import { useStore } from './store';
 import { shallow } from 'zustand/shallow';
@@ -11,8 +7,209 @@ import { LLMNode } from './nodes/llmNode';
 import { OutputNode } from './nodes/outputNode';
 import { TextNode } from './nodes/textNode';
 import { DateNode, FilterNode, NoteNode, TransformNode, DatabaseNode } from './nodes/exampleNodes';
+import { Sun, Moon, AlertCircle, CheckCircle2, XCircle, X } from 'lucide-react';
 
 import 'reactflow/dist/style.css';
+
+// ThemeToggle Component
+export const ThemeToggle = ({ isDark, toggleTheme }) => {
+
+  return (
+    <button
+      onClick={toggleTheme}
+      style={{
+        position: 'fixed',
+        top: '20px',
+        right: '20px',
+        width: '42px',
+        height: '42px',
+        borderRadius: '12px',
+        border: '1px solid rgba(255, 255, 255, 0.2)',
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(1px)',
+        WebkitBackdropFilter: 'blur(1px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.3s ease',
+        zIndex: 1000,
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
+        e.currentTarget.style.transform = 'scale(1.05)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+        e.currentTarget.style.transform = 'scale(1)';
+      }}
+      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+    >
+      {isDark ? (
+        <Sun width={24} height={24} style={{ color: '#fff' }} />
+      ) : (
+        <Moon width={24} height={24} style={{ color: '#111' }} />
+      )}
+    </button>
+  );
+};
+
+// SubmissionAlert Component
+export const SubmissionAlert = ({ result, error, onClose }) => {
+  // Hooks must be called before any early returns
+  const [currentTheme, setCurrentTheme] = useState(() => 
+    document.body.classList.contains('dark') ? 'dark' : 'light'
+  );
+
+  // Watch for theme changes while alert is open
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          const isDark = document.body.classList.contains('dark');
+          setCurrentTheme(isDark ? 'dark' : 'light');
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  // Early return after hooks
+  if (!result && !error) return null;
+
+  const isDAG = result?.is_dag;
+
+  // Icon colors
+  const successColor = '#10b981'; // green
+  const errorColor = '#ef4444'; // red
+  
+  const iconColor = error 
+    ? errorColor
+    : isDAG 
+    ? successColor
+    : errorColor;
+
+  // Background based on reactive theme state
+  const alertBg = currentTheme === 'dark'
+    ? 'rgba(0, 0, 0, 0.8)' 
+    : 'rgba(255, 255, 255, 0.8)';
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        top: '80px',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 1000,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: alertBg,
+          backdropFilter: 'blur(12px)',
+          WebkitBackdropFilter: 'blur(12px)',
+          borderRadius: '16px',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          padding: '16px 24px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px',
+          minWidth: '300px',
+          maxWidth: '500px',
+          animation: 'slideDownFade 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Left: Icon */}
+        <div
+          style={{
+            width: '40px',
+            height: '40px',
+            borderRadius: '50%',
+            backgroundColor: iconColor === successColor 
+              ? 'rgba(16, 185, 129, 0.2)' 
+              : 'rgba(239, 68, 68, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0
+          }}
+        >
+          {error ? (
+            <AlertCircle width={20} height={20} color={iconColor} strokeWidth={2.5} />
+          ) : isDAG ? (
+            <CheckCircle2 width={20} height={20} color={iconColor} strokeWidth={2.5} />
+          ) : (
+            <XCircle width={20} height={20} color={iconColor} strokeWidth={2.5} />
+          )}
+        </div>
+
+        {/* Middle: Text Details */}
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          {error ? (
+            <div style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>
+              Error: {error}
+            </div>
+          ) : result ? (
+            <>
+              <div style={{ color: 'var(--text-primary)', fontSize: '14px', fontWeight: 600 }}>
+                {isDAG ? 'Valid Pipeline' : 'Cycle Detected'}
+              </div>
+              <div style={{ display: 'flex', gap: '16px', fontSize: '13px', color: 'var(--text-primary)', opacity: 0.8 }}>
+                <span>Nodes: <strong>{result.num_nodes}</strong></span>
+                <span>Edges: <strong>{result.num_edges}</strong></span>
+                <span style={{ color: iconColor }}>
+                  DAG: <strong>{result.is_dag ? 'Yes' : 'No'}</strong>
+                </span>
+              </div>
+            </>
+          ) : null}
+        </div>
+
+        {/* Right: Close Button */}
+        <button
+          onClick={onClose}
+          style={{
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            padding: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--text-primary)',
+            opacity: 0.6,
+            transition: 'opacity 0.2s ease',
+            flexShrink: 0
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.opacity = '1';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.opacity = '0.6';
+          }}
+          aria-label="Close"
+        >
+          <X width={20} height={20} strokeWidth={2} />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
@@ -41,6 +238,7 @@ const selector = (state) => ({
 export const PipelineUI = () => {
     const reactFlowWrapper = useRef(null);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    const [isDark, setIsDark] = useState(false);
     const {
       nodes,
       edges,
@@ -50,6 +248,36 @@ export const PipelineUI = () => {
       onEdgesChange,
       onConnect
     } = useStore(selector, shallow);
+
+    // Theme state management
+    useEffect(() => {
+      // Check localStorage first, then system preference
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
+      
+      if (shouldBeDark) {
+        document.body.classList.add('dark');
+        setIsDark(true);
+      } else {
+        document.body.classList.remove('dark');
+        setIsDark(false);
+      }
+    }, []);
+
+    const toggleTheme = () => {
+      const newIsDark = !isDark;
+      setIsDark(newIsDark);
+      
+      if (newIsDark) {
+        document.body.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.body.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      }
+    };
 
     const getInitNodeData = (nodeID, type) => {
       let nodeData = { id: nodeID, nodeType: `${type}` };
@@ -65,7 +293,7 @@ export const PipelineUI = () => {
             const appData = JSON.parse(event.dataTransfer.getData('application/reactflow'));
             const type = appData?.nodeType;
       
-            // check if the dropped element is valid
+            
             if (typeof type === 'undefined' || !type) {
               return;
             }
@@ -96,7 +324,8 @@ export const PipelineUI = () => {
 
     return (
         <>
-        <div ref={reactFlowWrapper} style={{width: '100wv', height: '70vh'}}>
+        <ThemeToggle isDark={isDark} toggleTheme={toggleTheme} />
+        <div ref={reactFlowWrapper} style={{width: '100wv', height: '100%'}}>
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -113,7 +342,14 @@ export const PipelineUI = () => {
             >
                 <Background color="#aaa" gap={gridSize} />
                 <Controls />
-                <MiniMap />
+                <MiniMap 
+                    nodeColor={isDark ? "#555" : "#eee"}
+                    maskColor={isDark ? "rgba(0,0,0, 0.8)" : "rgba(255,255,255, 0.8)"}
+                    style={{
+                        backgroundColor: isDark ? '#1a1a1a' : '#f9f9f9',
+                        border: isDark ? '1px solid rgba(255,255,255,0.1)' : '1px solid #e5e7eb'
+                    }}
+                />
             </ReactFlow>
         </div>
         </>
