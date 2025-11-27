@@ -1,13 +1,7 @@
 import { X } from "lucide-react";
 import { Handle, Position, useReactFlow } from "reactflow";
 
-export const BaseNode = ({
-  id,
-  title,
-  children,
-  handles = [],
-  style = {},
-}) => {
+export const BaseNode = ({ id, title, children, handles = [], style = {} }) => {
   const { deleteElements } = useReactFlow();
 
   const handleDelete = () => {
