@@ -3,7 +3,6 @@ import { Handle, Position, useReactFlow } from "reactflow";
 
 export const BaseNode = ({
   id,
-  data,
   title,
   children,
   handles = [],
