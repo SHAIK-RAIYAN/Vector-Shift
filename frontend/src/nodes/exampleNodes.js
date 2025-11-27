@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Position } from 'reactflow';
+import { Position, NodeResizer } from 'reactflow';
 import { BaseNode } from './BaseNode';
 
 export const DateNode = ({ id, data }) => {
@@ -74,7 +74,7 @@ export const FilterNode = ({ id, data }) => {
   );
 };
 
-export const NoteNode = ({ id, data }) => {
+export const NoteNode = ({ id, data, selected }) => {
   const [note, setNote] = useState(data?.note || '');
 
   const handleNoteChange = (e) => {
@@ -82,29 +82,41 @@ export const NoteNode = ({ id, data }) => {
   };
 
   return (
-    <BaseNode
-      id={id}
-      data={data}
-      title="Note"
-      handles={[]}
-    >
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <>
+      <NodeResizer 
+        minWidth={200} 
+        minHeight={80} 
+        isVisible={selected} 
+        lineClassName="border-blue-400" 
+        handleClassName="h-3 w-3 bg-white border-2 border-blue-400" 
+      />
+      <BaseNode
+        id={id}
+        data={data}
+        title="Note"
+        handles={[]}
+        style={{ width: '100%', height: '100%' }}
+      >
         <textarea
           value={note}
           onChange={handleNoteChange}
+          onMouseDown={(e) => e.stopPropagation()}
           placeholder="Add your notes here..."
-          rows={3}
           style={{
-            border: '1px solid #d1d5db',
-            borderRadius: '4px',
-            padding: '4px 8px',
+            width: '100%',
+            height: '100%',
+            resize: 'none',
+            background: 'transparent',
+            border: 'none',
+            outline: 'none',
+            color: 'var(--text-primary)',
             fontSize: '12px',
-            resize: 'vertical',
-            fontFamily: 'inherit'
+            fontFamily: 'inherit',
+            padding: 0
           }}
         />
-      </div>
-    </BaseNode>
+      </BaseNode>
+    </>
   );
 };
 

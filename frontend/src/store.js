@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { createWithEqualityFn } from 'zustand/traditional';
 import {
     addEdge,
     applyNodeChanges,
@@ -6,7 +6,7 @@ import {
     MarkerType,
   } from 'reactflow';
 
-export const useStore = create((set, get) => ({
+export const useStore = createWithEqualityFn((set, get) => ({
     nodes: [],
     edges: [],
     getNodeID: (type) => {
