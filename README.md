@@ -1,10 +1,9 @@
 # VectorShift Frontend Technical Assessment
 
-A production-ready pipeline builder featuring a robust node abstraction system, real-time DAG detection, and a responsive Glassmorphism UI with persistent theming.
+A pipeline builder featuring a robust node abstraction system, on-demand DAG validation, and a responsive Glassmorphism UI with persistent theming.
 
 ![Project Preview](./frontend/public/preview.png)
 
-*(Note: If you want to include a screenshot, save one in frontend/public and uncomment this line)*
 
 ## 🚀 Key Features
 
@@ -14,19 +13,19 @@ A production-ready pipeline builder featuring a robust node abstraction system, 
 
 - **System-Aware Dark Mode:** Automatically syncs with OS preferences and persists user choice via `localStorage`.
 
-- **Floating HUD Toolbar:** A responsive, scrollable toolbar that adapts to mobile and desktop layouts.
+- **Floating Toolbar:** A responsive, scrollable toolbar that adapts to mobile and desktop layouts.
 
 - **Interactive MiniMap:** Context-aware navigation that syncs with the active theme.
 
-- **Smart Notifications:** Replaced native alerts with a custom, animated Toast system for success/error states.
+- **Custom Notification System:** Replaced native alerts with a custom, animated notification banner for success/error/empty states.
 
 ### 🏗️ Technical Architecture
 
-- **Scalable Node Abstraction (`BaseNode`):** Decoupled logic from layout, allowing rapid creation of 5+ new node types without code duplication.
+- **Scalable Node Abstraction (`BaseNode`):** Decoupled logic from layout, allowing rapid creation of 5 new example node types without code duplication.
 
 - **Advanced Text Node:** Features auto-resizing text areas and **Regex-based variable extraction** (e.g., `{{input}}` spawns a handle).
 
-- **Graph Algorithms:** Backend integration using `NetworkX` to perform **Directed Acyclic Graph (DAG)** validation in real-time.
+- **Graph Algorithms:** Backend integration using `NetworkX` to perform **Directed Acyclic Graph (DAG)** validation on pipeline submission.
 
 - **Custom Edge Logic:** Interactive edges with a centered "Delete" button for rapid prototyping.
 
@@ -158,29 +157,25 @@ npm start
 │   ├── src/
 │   │   ├── nodes/         # Node Components
 │   │   │   ├── BaseNode.js    # Core Abstraction Wrapper
+│   │   │   ├── inputNode.js   # Input node
+│   │   │   ├── outputNode.js  # Output node
 │   │   │   ├── textNode.js    # Regex & Resizing Logic
-│   │   │   └── ...            # Other node types
+│   │   │   ├── llmNode.js     # LLM node
+│   │   │   └── exampleNodes.js # 5 example nodes (Date, Filter, Note, Transform, Database)
 │   │   ├── edges/         # Custom Edges
 │   │   │   └── ButtonEdge.js  # Edge with Delete Button
-│   │   ├── ui.js          # UI Components (Alerts, ThemeToggle)
+│   │   ├── ui.js          # UI Components (Alerts, ThemeToggle, PipelineUI)
 │   │   ├── toolbar.js     # Floating Draggable Toolbar
+│   │   ├── draggableNode.js # Draggable node component for toolbar
 │   │   ├── submit.js      # Backend Integration Logic
-│   │   └── store.js       # Zustand Store & React Flow Hooks
+│   │   ├── store.js       # Zustand Store & React Flow Hooks
+│   │   ├── App.js         # Root component
+│   │   └── index.css      # Global styles & theme variables
 ```
 
 -----
 
-*Submitted by Shaik Raiyan*
+Submitted by Shaik Raiyan
 
-### **Final Submission Checklist**
 
-1.  **Video:** Recorded, audio checked, filename: `Shaik_Raiyan_screenrecording.mp4`.
-
-2.  **Cleanup:** Deleted `frontend/node_modules` and `backend/venv` folders.
-
-3.  **Zip:** Created `Shaik_Raiyan_technical_assessment.zip` containing `frontend/`, `backend/`, and this `README.md`.
-
-4.  **Upload:** Submit via the Google Form.
-
-**You are ready. Go submit and win.**
 

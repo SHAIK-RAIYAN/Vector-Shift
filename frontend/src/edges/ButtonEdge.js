@@ -40,7 +40,7 @@ export const ButtonEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosit
             alignItems: 'center',
             justifyContent: 'center',
             padding: 0,
-            transition: 'all 0.2s ease',
+            transition: 'none',
             backdropFilter: 'blur(8px)',
             WebkitBackdropFilter: 'blur(8px)',
             boxShadow: 'var(--node-shadow)'

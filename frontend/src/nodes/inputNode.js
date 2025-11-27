@@ -30,30 +30,35 @@ export const InputNode = ({ id, data }) => {
       ]}
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px' }}>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--text-primary)' }}>
           Name:
           <input 
             type="text" 
             value={currName} 
             onChange={handleNameChange}
             style={{
-              border: '1px solid #d1d5db',
+              border: '1px solid var(--border-color)',
               borderRadius: '4px',
               padding: '4px 8px',
-              fontSize: '12px'
+              fontSize: '12px',
+              backgroundColor: 'var(--input-bg)',
+              color: 'var(--input-text)'
             }}
           />
         </label>
-        <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px' }}>
+        <label style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '12px', color: 'var(--text-primary)' }}>
           Type:
           <select 
             value={inputType} 
             onChange={handleTypeChange}
             style={{
-              border: '1px solid #d1d5db',
+              border: '1px solid var(--border-color)',
               borderRadius: '4px',
               padding: '4px 8px',
-              fontSize: '12px'
+              fontSize: '12px',
+              backgroundColor: 'var(--input-bg)',
+              color: 'var(--input-text)',
+              cursor: 'pointer'
             }}
           >
             <option value="Text">Text</option>
