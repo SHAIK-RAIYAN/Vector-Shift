@@ -1,4 +1,4 @@
-# VectorShift Frontend Technical Assessment
+# VectorShift Frontend 
 
 A pipeline builder featuring a robust node abstraction system, on-demand DAG validation, and a responsive Glassmorphism UI with persistent theming.
 
@@ -175,7 +175,7 @@ npm start
 
 -----
 
-Submitted by Shaik Raiyan
+[Shaik Raiyan](https://shaikraiyan.me/)
 
 
 
